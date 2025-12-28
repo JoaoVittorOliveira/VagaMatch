@@ -47,43 +47,44 @@ export async function POST(req: NextRequest) {
 
     // 4. Montar o Prompt
     const prompt = `
-      ATUE COMO: Um Consultor de Carreira de Elite e Especialista em ATS.
+      VOCÊ É: Um Consultor de Carreira Experiente e Especialista em Recrutamento.
       
-      CONTEXTO: Você deve cruzar os dados de um currículo com uma vaga.
+      TAREFA: Analisar o alinhamento entre um currículo e uma descrição de vaga, fornecendo um parecer crítico e recomendações acionáveis.
       
-      DADOS:
-      --- CURRÍCULO: ---
+      CURRÍCULO:
       ${cleanText}
       
-      --- DESCRIÇÃO DA VAGA: ---
+      DESCRIÇÃO DA VAGA:
       ${jobDescription}
       
-      REGRAS CRÍTICAS DE ANÁLISE (LEIA COM ATENÇÃO):
+      PRINCÍPIOS DE ANÁLISE:
       
-      1. FILTRO DE PALAVRAS-CHAVE (O MAIS IMPORTANTE):
-         - IGNORE: Eventos sazonais ("Natal", "Black Friday"), Locais ("Palmas", "Centro"), Benefícios ("Vale Transporte"), Adjetivos genéricos ("Legal", "Bacana").
-         - FOQUE EM: Hard Skills (Tecnologias, Ferramentas ex: "Excel Avançado", "SAP"), Soft Skills Técnicas (ex: "Venda Consultiva", "Gestão de Conflitos") e Certificações.
-         - SE A VAGA PEDE "ORGANIZAÇÃO": Não sugira a palavra "Organização" solta. Sugira "Metodologia 5S" ou "Gestão de Processos".
+      1. ANÁLISE CONTEXTUAL E JUSTA:
+         - Analise o match entre o currículo e a vaga com base nos requisitos realmente solicitados.
+         - Identifique tanto hard skills (tecnologias, ferramentas, metodologias) quanto soft skills (liderança, comunicação, resolução de problemas) relevantes para a posição.
+         - Reconheça experiências transferíveis mesmo que em contextos diferentes.
       
-      2. SUGESTÕES PRÁTICAS E DIRETAS:
-         - Nada de "Melhore sua comunicação".
-         - Use o formato: "Ação + Contexto". Ex: "Em vez de listar tarefas, descreva: 'Gerenciei estoque de R$ 50k durante a alta temporada'".
-         - Se faltar uma skill, diga como evidenciá-la, não apenas "Adicione tal coisa".
+      2. RECOMENDAÇÕES PRÁTICAS E ACIONÁVEIS:
+         - Cada sugestão deve indicar uma ação específica: O QUE modificar, ONDE no currículo, e COMO melhorar a apresentação.
+         - Priorize adicionar evidências concretas: números, resultados, projetos específicos, métricas de impacto.
+         - Evite recomendações genéricas ou vagas ("melhore sua comunicação"). Seja específico.
       
-      3. RIGOR NA NOTA:
-         - Se o candidato tem a skill mas não prova com resultados, a nota cai.
-         - Se o currículo for genérico demais, a nota deve ser baixa (20-40).
+      3. RIGOR NA PONTUAÇÃO:
+         - O match_score deve refletir o alinhamento real entre as competências do candidato e os requisitos da vaga (0-100).
+         - Candidatos que têm a skill mas não a demonstram com resultados/contexto recebem pontuação mais baixa naquele aspecto.
+         - Currículos muito genéricos (sem detalhes, métricas, ou contexto) resultam em scores mais baixos.
+         - Currículos bem estruturados com evidências claras recebem scores mais altos.
       
-      SAÍDA OBRIGATÓRIA (JSON PURO):
+      4. SAÍDA OBRIGATÓRIA (JSON VÁLIDO):
       {
-        "match_score": (Inteiro 0-100),
-        "missing_keywords": ["Lista de 3 a 5 termos TÉCNICOS ou DE CARREIRA que realmente faltam. Sem datas ou locais."],
-        "brief_analysis": "Análise direta em 2 parágrafos. Aponte o erro fatal do currículo e o ponto forte.",
+        "match_score": <número inteiro de 0 a 100>,
+        "missing_keywords": [<lista de 3 a 5 competências, tecnologias ou experiências-chave que faltam no currículo para atender melhor aos requisitos da vaga>],
+        "brief_analysis": "<análise de 2 a 3 parágrafos. Resuma: (1) o principal ponto forte do candidato para esta vaga, (2) o principal gap ou desafio, (3) o potencial geral de fit>",
         "suggestions": [
-           "Dica 1: Focada em reescrever uma experiência específica para incluir métricas.",
-           "Dica 2: Focada em adicionar uma ferramenta/skill técnica que a vaga pede.",
-           "Dica 3: Focada em formatação ou clareza do objetivo profissional.",
-           "Dica 4: Uma dica de ouro para passar no ATS."
+          "<Sugestão 1: específica, indicando qual experiência reescrever e como incluir métricas/resultados>",
+          "<Sugestão 2: específica, indicando qual skill ou ferramenta adicionar e como evidenciar>",
+          "<Sugestão 3: específica sobre estrutura, clareza ou apresentação do currículo>",
+          "<Sugestão 4: dica estratégica para aumentar o destaque no ATS ou na avaliação inicial>"
         ]
       }
     `;

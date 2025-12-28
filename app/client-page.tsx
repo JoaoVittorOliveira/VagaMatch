@@ -93,24 +93,24 @@ export default function ClientPage({ user }: { user: any }) {
       <div className="max-w-3xl mx-auto">
         
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-extrabold text-slate-900 mb-2">VagaMatch <span className="text-blue-600">AI</span></h1>
-          <p className="text-slate-600">Passe pelo robô do RH com inteligência artificial.</p>
+          <h1 className="text-6xl font-extrabold text-slate-900 mb-2">VagaMatch <span className="text-blue-600">AI</span></h1>
+          <p className="text-xl text-slate-600">Junte-se à nossa comunidade de profissionais, escritores e criadores de conteúdo que usam IA para revolucionar o seu currículo!</p>
         </div>
 
         {/* INPUTS */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Seu Currículo (PDF)</label>
+              <label className="block text-lg font-medium text-slate-700 mb-2">Seu Currículo (PDF)</label>
               <input type="file" accept=".pdf" onChange={(e) => setFile(e.target.files?.[0] || null)}
                 className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Descrição da Vaga</label>
-              <textarea rows={4} className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" 
+              <label className="block text-lg font-medium text-slate-700 mb-2">Descrição da Vaga</label>
+              <textarea rows={4} className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 text-lg" 
                 placeholder="Cole a vaga aqui..." value={jobDescription} onChange={(e) => setJobDescription(e.target.value)} />
             </div>
-            <button type="submit" disabled={loading} className="w-full bg-slate-900 text-white font-bold py-3 rounded-lg hover:bg-slate-800 transition-all disabled:opacity-50">
+            <button type="submit" disabled={loading} className="w-full bg-slate-900 text-white font-bold py-3 rounded-lg hover:bg-slate-800 transition-all disabled:opacity-50 text-xl">
               {loading ? 'Analisando...' : 'Analisar Compatibilidade'}
             </button>
           </form>
@@ -123,21 +123,21 @@ export default function ClientPage({ user }: { user: any }) {
               <div className={`w-32 h-32 rounded-full border-8 flex items-center justify-center mx-auto mb-4 ${getScoreColor(result.match_score)}`}>
                 <span className="text-4xl font-bold">{result.match_score}%</span>
               </div>
-              <p className="text-slate-700 max-w-xl mx-auto">{result.brief_analysis}</p>
+              <p className="text-xl text-slate-700 max-w-xl mx-auto">{result.brief_analysis}</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-red-50 p-6 rounded-xl border border-red-100">
-                <h3 className="font-bold text-red-800 mb-3">⚠️ O que falta</h3>
+                <h3 className="font-bold text-xl text-red-800 mb-3">⚠️ O que falta</h3>
                 <div className="flex flex-wrap gap-2">
                   {result.missing_keywords.map((k, i) => (
-                    <span key={i} className="bg-white text-red-700 px-3 py-1 rounded-md text-sm border border-red-200">{k}</span>
+                    <span key={i} className="bg-white text-red-700 px-3 py-1 rounded-md text-lg border border-red-200">{k}</span>
                   ))}
                 </div>
               </div>
               <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
-                <h3 className="font-bold text-blue-800 mb-3">💡 Como melhorar</h3>
-                <ul className="space-y-2 text-sm text-blue-900">
+                <h3 className="font-bold text-xl text-blue-800 mb-3">💡 Como melhorar</h3>
+                <ul className="space-y-2 text-lg text-blue-900">
                   {result.suggestions.map((s, i) => <li key={i}>• {s}</li>)}
                 </ul>
               </div>
@@ -146,8 +146,8 @@ export default function ClientPage({ user }: { user: any }) {
             {/* BOTÃO PREMIUM */}
             {!rewrittenCV && (
               <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white text-center shadow-lg mt-8">
-                <h2 className="text-2xl font-bold mb-2">Quer o currículo perfeito?</h2>
-                <p className="mb-6 text-blue-100">Reescrita completa com IA focada na vaga.</p>
+                <h2 className="text-4xl font-bold mb-2">Quer o currículo perfeito?</h2>
+                <p className="mb-6 text-xl text-blue-100">Reescrita completa com IA focada na vaga.</p>
                 
                 {user ? (
                    // SE ESTIVER LOGADO: Botão funciona
@@ -161,8 +161,8 @@ export default function ClientPage({ user }: { user: any }) {
                 ) : (
                   // SE NÃO ESTIVER LOGADO: Botão pede login
                   <div className="bg-white/10 p-4 rounded-lg backdrop-blur-sm border border-white/20">
-                    <p className="mb-2 font-medium">Faça login para usar a IA Premium</p>
-                    <p className="text-sm opacity-80 mb-0">Role para o topo e clique em "Entrar com Google"</p>
+                    <p className="mb-2 font-medium text-lg">Faça login para usar a IA Premium</p>
+                    <p className="text-lg opacity-80 mb-0">Role para o topo e clique em "Entrar com Google"</p>
                   </div>
                 )}
               </div>
@@ -172,21 +172,21 @@ export default function ClientPage({ user }: { user: any }) {
             {rewrittenCV && (
               <div className="bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden mt-8">
                 <div className="bg-slate-900 p-6 text-white">
-                  <h2 className="text-2xl font-bold">{rewrittenCV.fullName}</h2>
-                  <p className="text-blue-400 font-medium uppercase tracking-wider text-sm">{rewrittenCV.title}</p>
+                  <h2 className="text-4xl font-bold">{rewrittenCV.fullName}</h2>
+                  <p className="text-blue-400 font-medium uppercase tracking-wider text-lg">{rewrittenCV.title}</p>
                 </div>
                 <div className="p-8 space-y-6">
                   
                   <section>
-                    <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Resumo Profissional</h3>
-                    <p className="text-slate-700 leading-relaxed">{rewrittenCV.summary}</p>
+                    <h3 className="text-lg font-bold text-slate-400 uppercase tracking-wider mb-2">Resumo Profissional</h3>
+                    <p className="text-xl text-slate-700 leading-relaxed">{rewrittenCV.summary}</p>
                   </section>
 
                   <section>
-                    <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Principais Competências</h3>
+                    <h3 className="text-lg font-bold text-slate-400 uppercase tracking-wider mb-3">Principais Competências</h3>
                     <div className="flex flex-wrap gap-2">
                       {rewrittenCV.skills.map((skill, i) => (
-                        <span key={i} className="bg-slate-100 text-slate-700 px-3 py-1 rounded text-sm font-medium">
+                        <span key={i} className="bg-slate-100 text-slate-700 px-3 py-1 rounded text-lg font-medium">
                           {skill}
                         </span>
                       ))}
@@ -194,15 +194,15 @@ export default function ClientPage({ user }: { user: any }) {
                   </section>
 
                   <section>
-                    <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Experiência Profissional</h3>
+                    <h3 className="text-lg font-bold text-slate-400 uppercase tracking-wider mb-4">Experiência Profissional</h3>
                     <div className="space-y-6">
                       {rewrittenCV.experiences.map((exp, i) => (
                         <div key={i} className="border-l-2 border-blue-200 pl-4">
-                          <h4 className="font-bold text-slate-900">{exp.role}</h4>
-                          <p className="text-sm text-slate-500 mb-2">{exp.company} • {exp.period}</p>
+                          <h4 className="font-bold text-xl text-slate-900">{exp.role}</h4>
+                          <p className="text-lg text-slate-500 mb-2">{exp.company} • {exp.period}</p>
                           <ul className="space-y-1">
                             {exp.achievements.map((ach, j) => (
-                              <li key={j} className="text-slate-700 text-sm flex items-start">
+                              <li key={j} className="text-slate-700 text-lg flex items-start">
                                 <span className="mr-2 text-blue-500">›</span> {ach}
                               </li>
                             ))}
@@ -213,8 +213,8 @@ export default function ClientPage({ user }: { user: any }) {
                   </section>
 
                    <section>
-                    <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Formação</h3>
-                    <ul className="list-disc list-inside text-slate-700 text-sm">
+                    <h3 className="text-lg font-bold text-slate-400 uppercase tracking-wider mb-2">Formação</h3>
+                    <ul className="list-disc list-inside text-slate-700 text-lg">
                       {rewrittenCV.education.map((edu, i) => (
                         <li key={i}>{edu}</li>
                       ))}
@@ -223,7 +223,7 @@ export default function ClientPage({ user }: { user: any }) {
 
                 </div>
                 <div className="bg-slate-50 p-4 border-t border-slate-100 text-center">
-                  <button onClick={() => window.print()} className="text-slate-600 hover:text-slate-900 text-sm font-medium flex items-center justify-center gap-2 mx-auto">
+                  <button onClick={() => window.print()} className="text-slate-600 hover:text-slate-900 text-lg font-medium flex items-center justify-center gap-2 mx-auto">
                     🖨️ Salvar como PDF (Ctrl + P)
                   </button>
                 </div>
