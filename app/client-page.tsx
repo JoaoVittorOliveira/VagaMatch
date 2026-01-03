@@ -94,7 +94,7 @@ export default function ClientPage({ user }: { user: any }) {
         
         <div className="text-center mb-10">
           <h1 className="text-6xl font-extrabold text-slate-900 mb-2">VagaMatch <span className="text-blue-600">AI</span></h1>
-          <p className="text-xl text-slate-600">Junte-se à nossa comunidade de profissionais, escritores e criadores de conteúdo que usam IA para revolucionar o seu currículo!</p>
+          <p className="text-xl text-slate-600">Passe pelos robôs de recrutamento (ATS). Nossa IA analisa e reescreve seu currículo para garantir compatibilidade máxima com a vaga desejada.</p>
         </div>
 
         {/* INPUTS */}

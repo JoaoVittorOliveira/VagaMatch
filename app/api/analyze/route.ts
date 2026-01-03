@@ -1,16 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import { z } from "zod";
+import { auth } from "@/auth";
+import { PrismaClient } from "@prisma/client";
 
 // @ts-ignore
 import PDFParser from 'pdf2json';
 
+const prisma = new PrismaClient();
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const AnalysisSchema = z.object({
+  resumeText: z.string()
+    .min(50, "O currículo parece vazio ou muito curto (mínimo 50 caracteres).")
+    .max(15000, "O currículo é muito extenso para processar (máximo 15k caracteres)."),
+  jobDescription: z.string()
+    .min(20, "A descrição da vaga é muito curta.")
+    .max(10000, "A descrição da vaga é muito longa (máximo 10000 caracteres).")
+});
+
 export async function POST(req: NextRequest) {
   try {
-    // 1. Receber os dados
+    
+    // Verifica se está logado
+    const session = await auth();
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Você precisa estar logado.' }, { status: 401 });
+    }
+
+    // Verifica se tem créditos no Banco
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email }
+    });
+
+    if (!user || user.credits <= 0) {
+      return NextResponse.json({ 
+        error: 'Saldo insuficiente. Recarregue seus créditos para continuar.' 
+      }, { status: 403 });
+    }
+    
     const formData = await req.formData();
     const file = formData.get('resume') as File;
     const jobDescription = formData.get('jobDescription') as string;
@@ -41,6 +71,18 @@ export async function POST(req: NextRequest) {
 
     // Limpeza básica do texto (remove caracteres estranhos de PDF)
     const cleanText = String(parsedText).replace(/----------------Page \(\d+\) Break----------------/g, "");
+
+    const validation = AnalysisSchema.safeParse({
+      resumeText: cleanText,
+      jobDescription: jobDescription
+    });
+
+    if (!validation.success) {
+      return NextResponse.json({ 
+        error: 'Dados inválidos detectados.', 
+        details: validation.error.format() 
+      }, { status: 400 });
+    }
 
     console.log("--- TEXTO LIDO (Início) ---");
     console.log(cleanText.substring(0, 150) + "...");
@@ -107,6 +149,11 @@ export async function POST(req: NextRequest) {
     }
 
     const result = JSON.parse(aiResponse);
+
+    await prisma.user.update({
+      where: { email: session.user.email },
+      data: { credits: { decrement: 1 } }
+    });
 
     return NextResponse.json({ ...result, extracted_text: cleanText });
 
