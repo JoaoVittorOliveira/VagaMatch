@@ -16,8 +16,9 @@ model User {
   accounts      Account[]
   sessions      Session[]
   
-  // Campo importante para seu SaaS:
-  credits       Int       @default(1) // Começa com 1 crédito grátis
+  credits       Int       @default(5) 
+  lastReset     DateTime  @default(now()) // Data da última recarga grátis
+  isPremium     Boolean   @default(false)
 }
 
 model Account {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { signIn } from "next-auth/react";
 
 interface AnalysisResult {
   match_score: number;
@@ -34,9 +35,22 @@ export default function ClientPage({ user }: { user: any }) {
   const [rewriting, setRewriting] = useState(false);
   const [rewrittenCV, setRewrittenCV] = useState<RewrittenCV | null>(null);
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file || !jobDescription) return alert('Preencha tudo!');
+    setErrorMessage(null); // Limpa erros antigos
+
+    // 1. Validação Visual Rápida
+    if (!user) {
+      // Se não estiver logado, nem chama o backend, já abre o login
+      await signIn("google");
+      return;
+    }
+    if (!file || !jobDescription) {
+      setErrorMessage("Por favor, preencha todos os campos.");
+      return;
+    }
 
     setLoading(true);
     setResult(null);
@@ -49,6 +63,22 @@ export default function ClientPage({ user }: { user: any }) {
     try {
       const response = await fetch('/api/analyze', { method: 'POST', body: formData });
       const data = await response.json();
+
+      if (!response.ok) {
+        // TRATAMENTO DE ERROS INTELIGENTE
+        if (data.error === 'LOGIN_REQUIRED') {
+          await signIn("google");
+        } else if (data.error === 'LIMIT_REACHED') {
+          setErrorMessage("🛑 Você atingiu seu limite diário de 5 currículos! Volte amanhã para mais créditos grátis.");
+        } else if (data.message) {
+          // Mostra a mensagem amigável que veio do Zod/Backend
+          setErrorMessage(`⚠️ ${data.message}`);
+        } else {
+          setErrorMessage("Ocorreu um erro inesperado. Tente novamente.");
+        }
+        return;
+      }
+
       setResult(data);
     } catch (error) {
       console.error(error);
