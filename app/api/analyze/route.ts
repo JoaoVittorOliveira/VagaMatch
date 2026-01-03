@@ -30,8 +30,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Você precisa estar logado.' }, { status: 401 });
     }
 
-    // Verifica se tem créditos no Banco
-    const user = await prisma.user.findUnique({
+    /* const user = await prisma.user.findUnique({
       where: { email: session.user.email }
     });
 
@@ -40,6 +39,7 @@ export async function POST(req: NextRequest) {
         error: 'Saldo insuficiente. Recarregue seus créditos para continuar.' 
       }, { status: 403 });
     }
+    */
     
     const formData = await req.formData();
     const file = formData.get('resume') as File;
