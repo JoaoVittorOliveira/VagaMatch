@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       where: { email: session.user.email }
     });
 
-    if (!user || user.credits <= 0) {
+    if (!user || user.credits <= -1) {
       return NextResponse.json({ 
         error: 'Saldo insuficiente. Recarregue seus créditos para continuar.' 
       }, { status: 403 });
